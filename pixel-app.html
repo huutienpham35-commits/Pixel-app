@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PIXEL APP</title>
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --card:#ffffff;
+    --accent:#e74c3c;
+    --border:#d6e6f6;
+    --muted:#8a8f98;
+    --radius:14px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+  }
+  body{
+    margin:0;
+    background:linear-gradient(180deg,#f2f6fb 0%,var(--bg) 100%);
+    color:#222;padding:18px;
+  }
+  .container{max-width:420px;margin:0 auto;}
+
+  /* Header */
+  .header{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:28px;padding:12px 16px;box-shadow:0 6px 18px rgba(20,40,80,0.06);margin-bottom:14px;}
+  .logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#f6f8ff;border:1px solid #eee;font-weight:700}
+  .title{font-weight:700;color:#b93b3b;}
+  .lang{margin-left:auto;display:flex;gap:6px;align-items:center;}
+  .flag{font-size:16px;opacity:0.9;}
+  .switch{width:38px;height:22px;border-radius:12px;background:#e7eef8;position:relative;}
+  .switch .knob{width:18px;height:18px;background:black;border-radius:50%;position:absolute;top:2px;left:2px;transition:all .18s ease;}
+  .switch.on{background:#4a9ef0;}
+  .switch.on .knob{left:18px;}
+
+  .card{background:var(--card);border-radius:var(--radius);padding:12px;border:1px solid #eee;margin-bottom:12px;}
+  .status-line{display:flex;gap:6px;align-items:center;margin-bottom:8px;}
+  .status-label{font-size:13px;color:var(--muted)}
+  .status-value{font-weight:700;color:#2aa84f}
+  .meta{font-size:13px;color:#666;line-height:1.45}
+
+  .device{background:var(--card);border-radius:10px;border:1px solid #dfeffb;padding:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+  .device strong{color:#8b2fa3}
+
+  /* Slider */
+  .ratio{background:#fff;padding:12px;border-radius:10px;border:1px solid #dfeffb;margin-bottom:10px;}
+  .slider-row{display:flex;gap:10px;align-items:center;}
+  .slider{flex:1;height:14px;background:#1a1a1a;border-radius:10px;position:relative;overflow:hidden;touch-action:none;cursor:pointer;}
+  .slider.locked{opacity:0.55;pointer-events:none;cursor:not-allowed;}
+  .slider .fill{height:100%;background:linear-gradient(90deg,#e53935,#c62828);border-radius:10px;width:6%;}
+  .slider .thumb{position:absolute;top:50%;left:6%;transform:translate(-50%,-50%);width:18px;height:18px;background:black;border-radius:50%;box-shadow:0 3px 8px rgba(0,0,0,0.25);}
+  #ratioValue{width:40px;text-align:center;font-weight:700;color:#222;}
+
+  /* Features */
+  .features{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .feature{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;border:2px solid var(--border);background:linear-gradient(180deg,#fff,#fbfdff);}
+  .feature .label{flex:1;font-weight:700}
+  .feature .sub{font-weight:900;padding:8px 14px;border-radius:8px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.2);}
+  .pink{background:#ff9a9e;}
+  .green{background:#7be495;}
+  .blue{background:#80bfff;}
+  .brown{background:#c6a793;}
+  .muted-btn{background:#b6b6b6;}
+
+  .toggle{width:46px;height:26px;border-radius:15px;background:#e7eef8;position:relative;cursor:pointer;transition:all .12s ease;}
+  .toggle.locked{opacity:0.55;pointer-events:none;cursor:not-allowed;}
+  .toggle.on{background:linear-gradient(90deg,#f14b44,#d93b33);}
+  .toggle .dot{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:black;transition:all .15s ease;}
+  .toggle.on .dot{left:23px;}
+
+  .actions{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+  .big-btn{padding:12px;border-radius:999px;text-align:center;font-weight:800;border:3px solid #cfeee0;background:transparent;color:#0a6b3a;cursor:pointer;}
+  .big-btn.secondary{border-color:#cfe6ff;color:#0a5aa6;}
+  .big-btn.disabled{opacity:0.55;pointer-events:none;cursor:not-allowed;}
+
+  .small{font-size:12px;color:#b23b3b;margin-top:12px;text-align:center;}
+
+  /* Key card */
+  .key-card{background:#0f1724;color:#fff;border-radius:12px;padding:14px;margin-top:14px;border:1px solid rgba(255,255,255,0.06);}
+  .key-row{display:flex;gap:8px;align-items:center;}
+  .key-input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#fff;font-weight:700;}
+  .key-btn{padding:10px 14px;border-radius:10px;background:#2b2f36;color:#fff;border:none;cursor:pointer;font-weight:800;}
+  .key-msg{margin-top:10px;font-weight:800;}
+  .key-msg.error{color:#ff6b6b;}
+  .key-msg.ok{color:#4ef08a;}
+
+  @media (max-width:420px){
+    body{padding:12px}
+    .container{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">🔫</div>
+    <div>
+      <div class="title">PIXEL APP</div>
+      <div style="font-size:12px;color:#888">Ứng dụng - PIXEL APP</div>
+    </div>
+    <div class="lang">
+      <div class="flag">🇻🇳</div>
+      <div class="flag">🇻🇳</div>
+      <div class="flag">🇻🇳</div>
+      <div id="globalSwitch" class="switch" <div class="knob"></div></div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="card">
+    <div class="status-line">
+      <div class="status-label">Trạng Thái:</div>
+      <div class="status-value" id="runningState">Tạm Đóng</div>
+      <div style="margin-left:auto;font-size:12px;color:#999">Cập Nhật: Phiên Bản OB51</div>
+    </div>
+    <div class="meta">
+      File được phát triển bởi 𝙃𝙏 𝙄𝙊𝙎ᯓᡣ𐭩
+    </div>
+  </div>
+
+  <!-- Device -->
+  <div class="device card">
+    <div>Thiết Bị:</div>
+    <div><strong id="deviceName">ĐÃ XÁC ĐỊNH</strong></div>
+  </div>
+
+  <!-- Slider -->
+  <div class="ratio card">
+    <div style="font-weight:700;margin-bottom:8px">Tỉ Lệ Headshot</div>
+    <div class="slider-row">
+      <div style="width:40px;text-align:center;font-weight:700;color:#222">0</div>
+      <div class="slider locked" id="ratioSlider" aria-disabled="true">
+        <div class="fill" id="sliderFill" style="width:6%"></div>
+        <div class="thumb" id="sliderThumb" style="left:6%"></div>
+      </div>
+      <div id="ratioValue">0%</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features">
+    <div class="feature">
+      <div class="label">NHẸ TÂM 90%</div>
+      <div class="pink sub">Nhẹ Tâm</div>
+      <div id="toggle1" class="toggle locked" onclick="toggleFeature(this)"><div class="dot"></div></div>
+    </div>
+
+    <div class="feature">
+      <div class="label">FIX RUNG</div>
+      <div class="green sub">Fix rung</div>
+      <div id="toggle2" class="toggle locked" onclick="toggleFeature(this)"><div class="dot"></div></div>
+    </div>
+
+    <div class="feature">
+      <div class="label">GIẢM LAG</div>
+      <div class="blue sub">giảm lag</div>
+      <div id="toggle3" class="toggle locked" onclick="toggleFeature(this)"><div class="dot"></div></div>
+    </div>
+
+    <div class="feature">
+      <div class="label">TÂM ẢO 🎯</div>
+      <div class="brown sub">Tâm ảo</div>
+      <div id="toggle4" class="toggle locked" onclick="toggleFeature(this)"><div class="dot"></div></div>
+    </div>
+
+    <div class="feature">
+      <div class="label">ANTIBAND</div>
+      <div class="muted-btn sub">Bảo Vệ</div>
+      <div id="toggle5" class="toggle locked" onclick="toggleFeature(this)"><div class="dot"></div></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button id="btnFreeFire" class="big-btn disabled" onclick="selectGame('FREE FIRE')" disabled>FREE FIRE</button>
+    <button id="btnFreeFireMax" class="big-btn secondary disabled" onclick="selectGame('FREE FIRE MAX')" disabled>FREE FIRE MAX</button>
+  </div>
+
+  <div class="small">⚠️VUI LÒNG BẬT CÁC CHỨC NĂNG TRƯỚC KHI VÀO GAME⚠️</div>
+
+  <!-- KEY SECTION (cuối menu) -->
+  <div class="key-card">
+    <div style="font-weight:900;margin-bottom:8px;font-size:16px">🔒 Nhập Key để Kích Hoạt</div>
+    <div class="key-row">
+      <input id="keyInput" class="key-input" type="password" placeholder="Nhập key tại đây" aria-label="Nhập key">
+      <button id="activateBtn" class="key-btn" onclick="checkKey()">Kích Hoạt</button>
+    </div>
+    <div id="keyMessage" class="key-msg" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+  // State
+  let unlocked = false;
+  const CORRECT_KEY = "phuongthaoios";
+
+  // Elements
+  const slider = document.getElementById('ratioSlider');
+  const fill = document.getElementById('sliderFill');
+  const thumb = document.getElementById('sliderThumb');
+  const val = document.getElementById('ratioValue');
+
+  const toggles = [
+    document.getElementById('toggle1'),
+    document.getElementById('toggle2'),
+    document.getElementById('toggle3'),
+    document.getElementById('toggle4'),
+    document.getElementById('toggle5')
+  ];
+
+  const btnFF = document.getElementById('btnFreeFire');
+  const btnFFMax = document.getElementById('btnFreeFireMax');
+  const runningState = document.getElementById('runningState');
+  const keyMessage = document.getElementById('keyMessage');
+
+  // Initial slider state
+  function updateSlider(percent){
+    percent = Math.max(0, Math.min(100, percent));
+    fill.style.width = percent + '%';
+    thumb.style.left = percent + '%';
+    val.textContent = Math.round(percent) + '%';
+  }
+  updateSlider(6);
+
+  // Drag logic (works only when unlocked)
+  let isDragging = false;
+  function handleMove(clientX){
+    if(!unlocked) return;
+    const rect = slider.getBoundingClientRect();
+    let percent = ((clientX - rect.left) / rect.width) * 100;
+    updateSlider(percent);
+  }
+
+  slider.addEventListener('mousedown', e => { if(unlocked){ isDragging = true; handleMove(e.clientX);} });
+  window.addEventListener('mousemove', e => { if(isDragging) handleMove(e.clientX); });
+  window.addEventListener('mouseup', ()=> isDragging=false);
+
+  slider.addEventListener('touchstart', e => { if(unlocked){ isDragging = true; handleMove(e.touches[0].clientX); } }, {passive:false});
+  window.addEventListener('touchmove', e => { if(isDragging) handleMove(e.touches[0].clientX); }, {passive:false});
+  window.addEventListener('touchend', ()=> isDragging=false);
+
+  // Toggle handler (check unlocked)
+  function toggleFeature(el){
+    if(!unlocked){
+      // small visual feedback: flash border
+      el.animate([{boxShadow: '0 0 0 rgba(255,0,0,0.0)'},{boxShadow:'0 0 8px rgba(255,0,0,0.25)'},{boxShadow:'0 0 0 rgba(255,0,0,0)'}], {duration:300});
+      // message
+      flashKeyMessage("Bạn phải nhập key hợp lệ để bật chức năng", "error");
+      return;
+    }
+    el.classList.toggle('on');
+  }
+
+  // Game button
+  function selectGame(name){
+    if(!unlocked){
+      flashKeyMessage("Bạn phải kích hoạt key trước khi chọn game", "error");
+      return;
+    }
+    alert('Bạn đã chọn: ' + name + '\\');
+  }
+
+  // Key check
+  function checkKey(){
+    const key = (document.getElementById('keyInput').value || "").trim();
+    if(key === CORRECT_KEY){
+      unlocked = true;
+      keyMessage.className = 'key-msg ok';
+      keyMessage.textContent = '✅ Key hợp lệ! Các tính năng đã được mở khóa.';
+      // enable toggles and slider and buttons
+      toggles.forEach(t=>{ t.classList.remove('locked'); });
+      slider.classList.remove('locked');
+      btnFF.classList.remove('disabled'); btnFF.removeAttribute('disabled');
+      btnFFMax.classList.remove('disabled'); btnFFMax.removeAttribute('disabled');
+      runningState.textContent = 'Đang Hoạt Động';
+      // optional: highlight activated visuals
+      document.getElementById('activateBtn').textContent = 'Đã Kích Hoạt';
+      document.getElementById('activateBtn').disabled = true;
+      document.getElementById('activateBtn').style.opacity = 0.6;
+    } else {
+      unlocked = false;
+      keyMessage.className = 'key-msg error';
+      keyMessage.textContent = '❌ Key không hợp lệ vui lòng liên hệ zalo 039/866/4626 để mua key';
+      // keep everything locked
+      toggles.forEach(t=>{ t.classList.add('locked'); t.classList.remove('on'); });
+      slider.classList.add('locked');
+      btnFF.classList.add('disabled'); btnFF.setAttribute('disabled','');
+      btnFFMax.classList.add('disabled'); btnFFMax.setAttribute('disabled','');
+      runningState.textContent = 'Tạm Đóng';
+    }
+  }
+
+  // helper to flash key message programmatically
+  function flashKeyMessage(text, type){
+    keyMessage.className = 'key-msg ' + (type === 'error'? 'error':'ok');
+    keyMessage.textContent = type === 'error' ? ('❌ ' + text) : ('✅ ' + text);
+    setTimeout(()=>{ if(!unlocked) keyMessage.textContent = ''; }, 1800);
+  }
+
+  // Optional: allow Enter key to check key input
+  document.getElementById('keyInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') checkKey();
+  });
+
+</script>
+</body>
